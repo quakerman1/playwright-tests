@@ -13,7 +13,7 @@ test.describe('Login Automation', ()=>{
     })
 
 
-    test.only('Login User with correct email and password', {
+    test('Login User with correct email and password', {
         tag: '@smoke',
     }, async ({ page }) => {
         await page.getByRole('link', { name: ' Signup / Login' }).click();
