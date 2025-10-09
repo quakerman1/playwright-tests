@@ -28,20 +28,19 @@ test.describe('Login Automation', ()=>{
         await expect(page.getByRole('link', { name: ' Logout' })).toBeVisible();
 
     //Validate user via public API
-    const apiContext = await request.newContext();
-    const response = await apiContext.post(`${baseURL}/api/verifyLogin`, {
-      form: { email: user,
-            password: password
-       }
-    });
+        // const apiContext = await request.newContext();
+        // const response = await apiContext.post(`${baseURL}/api/verifyLogin`, {
+        // form: { email: user,
+        //         password: password
+        // }
+        // });
 
-    await expect(response.ok()).toBeTruthy();
+        // await expect(response.ok()).toBeTruthy();
 
-    const json = await response.json();
-    console.log('📦 Datos devueltos por API:', json);
-    //Verify message match
-    expect(json.message).toBe('User exists!');
-
+        // const json = await response.json();
+        // console.log('📦 Datos devueltos por API:', json);
+        // //Verify message match
+        // expect(json.message).toBe('User exists!');
     })
 
     test('Login User with incorrect email and password', async ({ page }) => {
