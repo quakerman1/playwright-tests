@@ -1,62 +1,70 @@
 import { test, expect, request } from '@playwright/test';
+import { LoginPage } from '../../pages/LoginPage';
+import { log } from 'console';
+import { RegisterPage } from '../../pages/RegisterPage';
 
 
-test.describe('Login Automation', ()=>{
-    const baseURL = 'https://automationexercise.com';
-    const user = 'chitaimpetuoso@gmail.com';
+test.describe('Login suite', ()=>{
+    const email = 'chitaimpetuoso@gmail.com';
     const password = 'test';
+    const user = 'Agustin Rojas';
     
     test.beforeEach('Navigate to baseURL', async ({ page })=>{
         // Go to the starting url before each test.
-        await page.goto(baseURL);
+        await page.goto('');
         await expect(page.getByRole('link', { name: 'Website for automation' })).toBeVisible();
     })
 
 
     test('Register User', async({ page }) =>{
-        await page.getByRole('link', { name: ' Signup / Login' }).click();
-        await expect(page.getByRole('heading', { name: 'New User Signup!' })).toBeVisible();
-        await page.getByRole('textbox', { name: 'Name' }).fill('New User Name');
-        await page.locator('form').filter({ hasText: 'Signup' }).getByPlaceholder('Email Address').fill('newuseremail@test.com');
-        await page.getByRole('button', { name: 'Signup' }).click();
-        await page.getByRole('radio', { name: 'Mr.' }).check();
-        await page.getByRole('textbox', { name: 'Password *' }).fill('test');
-        await page.locator('#days').selectOption('28');
-        await page.locator('#months').selectOption('6');
-        await page.locator('#years').selectOption('1982');
-        await page.getByRole('textbox', { name: 'First name *' }).fill('Agus');
-        await page.getByRole('textbox', { name: 'Last name *' }).fill('Rojas');
-        await page.getByRole('textbox', { name: 'Address * (Street address, P.' }).fill('Avenida Simpreviva 742');
-        await page.getByLabel('Country *').selectOption('United States');
-        await page.getByRole('textbox', { name: 'State *' }).fill('Nevada');
-        await page.getByRole('textbox', { name: 'City * Zipcode *' }).fill('Henderson');
-        await page.locator('#zipcode').fill('1234');
-        await page.getByRole('textbox', { name: 'Mobile Number *' }).fill('01987654321');
-        await page.getByRole('button', { name: 'Create Account' }).click();
-        await expect(page.getByText('Account Created!')).toBeVisible();
-        await expect(page.getByText('Congratulations! Your new')).toBeVisible();
-        await page.getByRole('link', { name: 'Continue' }).click();
-        await expect(page.getByText('Logged in as New User Name')).toBeVisible();
-        await page.getByRole('link', { name: ' Delete Account' }).click();
-        await expect(page.getByText('Account Deleted!')).toBeVisible();
-        await expect(page.getByText('Your account has been')).toBeVisible();
-        await page.getByRole('link', { name: 'Continue' }).click();
-        await expect(page.getByRole('link', { name: ' Signup / Login' })).toBeVisible(); 
+        
+        const registerPage = new RegisterPage(page);
+
+        await registerPage.clickSignupLoginLink();
+        await registerPage.verifyText('New User Signup!');
+        await registerPage.setUserName('New User Name');
+        await registerPage.setEmail('newuseremail@test.com');
+        await registerPage.clickSignup();
+
+        await registerPage.setTitle('Mr.');
+        await registerPage.setPassword('test');
+        await registerPage.setDay('28');
+        await registerPage.setMonth('6');
+        await registerPage.setYear('1982');
+        await registerPage.setFirstName('Agus');
+        await registerPage.setLastName('Rojas');
+        await registerPage.setAddress('Avenida Simpreviva 742');
+        await registerPage.setCountry('United States');
+        await registerPage.setState('Nevada');
+        await registerPage.setCity('Henderson');
+        await registerPage.setZipCode('1234');
+        await registerPage.setMobileNumber('01987654321');
+        await registerPage.clickCreateAccount();
+        await registerPage.verifyText('Account Created!');
+        await registerPage.verifyText('Congratulations! Your new');
+        await registerPage.clickContinue();
+        await registerPage.verifyText('Logged in as New User Name');
+
+        await registerPage.clickDeleteAccount();     
+        await registerPage.verifyText('Account Deleted!');
+        await registerPage.verifyText('Your account has been');
+        await registerPage.clickContinue();
+        await registerPage.verifyLink('Test Cases');
+
     })
 
 
     test('Login User with correct email and password', {
         tag: '@smoke',
     }, async ({ page }) => {
-        await page.getByRole('link', { name: ' Signup / Login' }).click();
-        await expect(page.getByRole('heading', { name: 'Login to your account' })).toBeVisible();
-        await page.locator('form').filter({ hasText: 'Login' }).getByPlaceholder('Email Address').fill(user);
-        //This is another option for previous step...
-        //await page.locator('[data-qa="login-email"]').fill(user);
-        await page.getByRole('textbox', { name: 'Password' }).fill(password);
-        await page.getByRole('button', { name: 'Login' }).click();                                
-        await expect(page.getByText('Logged in as Agustin Rojas')).toBeVisible();
-        await expect(page.getByRole('link', { name: ' Logout' })).toBeVisible();
+        const loginPage = new LoginPage(page);   
+        await loginPage.clickSignupLoginLink();
+        await loginPage.verifyText('Login to your account');
+        await loginPage.setEmail(email);
+        await loginPage.setPassword(password);
+        await loginPage.clickLogin();
+        await loginPage.verifyText('Logged in as ' + user);
+        await loginPage.verifyLink(' Logout');
 
     //Validate user via public API
         // const apiContext = await request.newContext();
@@ -75,32 +83,36 @@ test.describe('Login Automation', ()=>{
     })
 
     test('Login User with incorrect email and password', async ({ page }) => {
-        await page.getByRole('link', { name: ' Signup / Login' }).click();
-        await expect(page.getByRole('heading', { name: 'Login to your account' })).toBeVisible();
-        await page.locator('[data-qa="login-email"]').fill('incorrectemail@gmail.com');
-        await page.getByRole('textbox', { name: 'Password' }).fill('incorrectpassword');
-        await page.getByRole('button', { name: 'Login' }).click();
-        await expect(page.getByText('Your email or password is incorrect!')).toBeVisible();
+        const loginPage = new LoginPage(page);   
+        await loginPage.clickSignupLoginLink();
+        await loginPage.verifyText('Login to your account');
+        await loginPage.setEmail('incorrectemail@gmail.com');
+        await loginPage.setPassword('incorrectpassword');
+        await loginPage.clickLogin();
+        await loginPage.verifyText('Your email or password is incorrect!');
     })
 
     test('Logout User', async ({ page }) => {
-        await page.getByRole('link', { name: ' Signup / Login' }).click();
-        await expect(page.getByRole('heading', { name: 'Login to your account' })).toBeVisible();
-        await page.locator('[data-qa="login-email"]').fill(user);
-        await page.getByRole('textbox', { name: 'Password' }).fill(password);
-        await page.getByRole('button', { name: 'Login' }).click();
-        await expect(page.getByText('Logged in as Agustin Rojas')).toBeVisible();
-        await page.getByRole('link', { name: ' Logout' }).click();
-        await expect(page.getByRole('heading', { name: 'Login to your account' })).toBeVisible();
+        const loginPage = new LoginPage(page);   
+        await loginPage.clickSignupLoginLink();
+        await loginPage.setEmail(email);
+        await loginPage.setPassword(password);
+        await loginPage.clickLogin();
+        await loginPage.verifyLink(' Logout');
+        await loginPage.clickLogoutLink();
+        await loginPage.verifyText('Login to your account');
     })
 
     test('Register User with existing email', async({page }) => {
-        await page.getByRole('link', { name: ' Signup / Login' }).click();
-        await expect(page.getByRole('heading', { name: 'New User Signup!' })).toBeVisible();
-        await page.getByRole('textbox', { name: 'Name' }).fill('Agustin Rojas');
-        await page.locator('form').filter({ hasText: 'Signup' }).getByPlaceholder('Email Address').fill(user);
-        await page.getByRole('button', { name: 'Signup' }).click();
-        await expect(page.getByText('Email Address already exist!')).toBeVisible();
+
+        const registerPage = new RegisterPage(page);
+
+        await registerPage.clickSignupLoginLink();
+        await registerPage.verifyText('New User Signup!');
+        await registerPage.setUserName(user);
+        await registerPage.setEmail(email);
+        await registerPage.clickSignup();
+        await registerPage.verifyText('Email Address already exist!');
     })
 
 })
