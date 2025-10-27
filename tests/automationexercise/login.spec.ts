@@ -2,12 +2,10 @@ import { test, expect, request } from '@playwright/test';
 import { LoginPage } from '../../pages/LoginPage';
 import { log } from 'console';
 import { RegisterPage } from '../../pages/RegisterPage';
+import users from '../../data/users.json';
 
 
 test.describe('Login suite', ()=>{
-    const email = 'chitaimpetuoso@gmail.com';
-    const password = 'test';
-    const user = 'Agustin Rojas';
     
     test.beforeEach('Navigate to baseURL', async ({ page })=>{
         // Go to the starting url before each test.
@@ -22,23 +20,23 @@ test.describe('Login suite', ()=>{
 
         await registerPage.clickSignupLoginLink();
         await registerPage.verifyText('New User Signup!');
-        await registerPage.setUserName('New User Name');
-        await registerPage.setEmail('newuseremail@test.com');
+        await registerPage.setUserName(users.newUser.user);
+        await registerPage.setEmail(users.newUser.email);
         await registerPage.clickSignup();
 
-        await registerPage.setTitle('Mr.');
-        await registerPage.setPassword('test');
-        await registerPage.setDay('28');
-        await registerPage.setMonth('6');
-        await registerPage.setYear('1982');
-        await registerPage.setFirstName('Agus');
-        await registerPage.setLastName('Rojas');
-        await registerPage.setAddress('Avenida Simpreviva 742');
-        await registerPage.setCountry('United States');
-        await registerPage.setState('Nevada');
-        await registerPage.setCity('Henderson');
-        await registerPage.setZipCode('1234');
-        await registerPage.setMobileNumber('01987654321');
+        await registerPage.setTitle(users.newUser.title);
+        await registerPage.setPassword(users.newUser.password);
+        await registerPage.setDay(users.newUser.day);
+        await registerPage.setMonth(users.newUser.month);
+        await registerPage.setYear(users.newUser.year);
+        await registerPage.setFirstName(users.newUser.firstName);
+        await registerPage.setLastName(users.newUser.lastName);
+        await registerPage.setAddress(users.newUser.address);
+        await registerPage.setCountry(users.newUser.country);
+        await registerPage.setState(users.newUser.state);
+        await registerPage.setCity(users.newUser.city);
+        await registerPage.setZipCode(users.newUser.zipCode);
+        await registerPage.setMobileNumber(users.newUser.mobileNumber);
         await registerPage.clickCreateAccount();
         await registerPage.verifyText('Account Created!');
         await registerPage.verifyText('Congratulations! Your new');
@@ -60,10 +58,10 @@ test.describe('Login suite', ()=>{
         const loginPage = new LoginPage(page);   
         await loginPage.clickSignupLoginLink();
         await loginPage.verifyText('Login to your account');
-        await loginPage.setEmail(email);
-        await loginPage.setPassword(password);
+        await loginPage.setEmail(users.validUser.email);
+        await loginPage.setPassword(users.validUser.password);
         await loginPage.clickLogin();
-        await loginPage.verifyText('Logged in as ' + user);
+        await loginPage.verifyText('Logged in as ' + users.validUser.user);
         await loginPage.verifyLink(' Logout');
 
     //Validate user via public API
@@ -86,8 +84,8 @@ test.describe('Login suite', ()=>{
         const loginPage = new LoginPage(page);   
         await loginPage.clickSignupLoginLink();
         await loginPage.verifyText('Login to your account');
-        await loginPage.setEmail('incorrectemail@gmail.com');
-        await loginPage.setPassword('incorrectpassword');
+        await loginPage.setEmail(users.invalidUser.email);
+        await loginPage.setPassword(users.invalidUser.password);
         await loginPage.clickLogin();
         await loginPage.verifyText('Your email or password is incorrect!');
     })
@@ -95,8 +93,8 @@ test.describe('Login suite', ()=>{
     test('Logout User', async ({ page }) => {
         const loginPage = new LoginPage(page);   
         await loginPage.clickSignupLoginLink();
-        await loginPage.setEmail(email);
-        await loginPage.setPassword(password);
+        await loginPage.setEmail(users.validUser.email);
+        await loginPage.setPassword(users.validUser.password);
         await loginPage.clickLogin();
         await loginPage.verifyLink(' Logout');
         await loginPage.clickLogoutLink();
@@ -109,8 +107,8 @@ test.describe('Login suite', ()=>{
 
         await registerPage.clickSignupLoginLink();
         await registerPage.verifyText('New User Signup!');
-        await registerPage.setUserName(user);
-        await registerPage.setEmail(email);
+        await registerPage.setUserName(users.validUser.user);
+        await registerPage.setEmail(users.validUser.email);
         await registerPage.clickSignup();
         await registerPage.verifyText('Email Address already exist!');
     })

@@ -1,0 +1,29 @@
+{
+    "validUser": {
+        "user": "Agustin Rojas",
+        "email": "chitaimpetuoso@gmail.com",
+        "password": "test"
+    },
+    "invalidUser": {
+        "user": "Cosme Fulanito",
+        "email": "incorrectemail@gmail.com",
+        "password": "incorrectpassword"
+    },
+    "newUser": {
+        "user": "New User Name",
+        "email": "newuseremail@test.com",
+        "password": "test",
+        "title": "Mr.",
+        "day": "28",
+        "month": "6",
+        "year": "1982",
+        "firstName": "Agus",
+        "lastName": "Rojas",
+        "address": "Avenida Simpreviva 742",
+        "country": "United States",
+        "state": "Nevada",
+        "city": "Henderson",
+        "zipCode": "1234",
+        "mobileNumber": "01987654321"
+    }
+}
