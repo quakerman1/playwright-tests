@@ -1,4 +1,4 @@
-import { test, expect, request } from '@playwright/test';
+import { test, expect, request, defineConfig } from '@playwright/test';
 import { LoginPage } from '../../pages/LoginPage';
 import { log } from 'console';
 import { RegisterPage } from '../../pages/RegisterPage';
@@ -64,20 +64,6 @@ test.describe('Login suite', ()=>{
         await loginPage.verifyText('Logged in as ' + users.validUser.user);
         await loginPage.verifyLink(' Logout');
 
-    //Validate user via public API
-        // const apiContext = await request.newContext();
-        // const response = await apiContext.post(`${baseURL}/api/verifyLogin`, {
-        // form: { email: user,
-        //         password: password
-        // }
-        // });
-
-        // await expect(response.ok()).toBeTruthy();
-
-        // const json = await response.json();
-        // console.log('📦 Datos devueltos por API:', json);
-        // //Verify message match
-        // expect(json.message).toBe('User exists!');
     })
 
     test('Login User with incorrect email and password', async ({ page }) => {
