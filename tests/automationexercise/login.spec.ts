@@ -1,4 +1,4 @@
-import { test, expect, request, defineConfig } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { LoginPage } from '../../pages/LoginPage';
 import { log } from 'console';
 import { RegisterPage } from '../../pages/RegisterPage';
